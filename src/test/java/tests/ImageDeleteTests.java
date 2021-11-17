@@ -14,13 +14,14 @@ import static io.restassured.RestAssured.given;
 public class ImageDeleteTests extends BaseTest {
     private final String PATH_TO_IMAGE = "src/test/resources/luca_02.jpeg";
     static String encodedFile;
-    String uploadedImageId;
+    String deleteHashImage;
 
     @BeforeEach
     void setUpUp() {
         byte[] byteArray = getFileContent(PATH_TO_IMAGE);
         encodedFile = Base64.getEncoder().encodeToString(byteArray);
-        uploadedImageId = given()
+
+        deleteHashImage = given()
                 .headers("Authorization", token)
                 .multiPart("image", encodedFile)
                 .expect()
@@ -40,7 +41,7 @@ public class ImageDeleteTests extends BaseTest {
         given()
                 .headers("Authorization", token)
                 .when()
-                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", uploadedImageId)
+                .delete("https://api.imgur.com/3/image/{deleteHash}", deleteHashImage)
                 .prettyPeek()
                 .then()
                 .statusCode(200);
@@ -51,7 +52,7 @@ public class ImageDeleteTests extends BaseTest {
     void deleteFileUnAuthorizeTest() {
         given()
                 .when()
-                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "", uploadedImageId)
+                .delete("https://api.imgur.com/3/image/{deleteHash}", deleteHashImage)
                 .prettyPeek()
                 .then()
                 .statusCode(401);
@@ -63,9 +64,9 @@ public class ImageDeleteTests extends BaseTest {
         given()
                 .headers("Authorization", token)
                 .when()
-                .delete("https://api.imgur.com/3/account/{username}/image/{deleteHash}", "testprogmath", "")
+                .delete("https://api.imgur.com/3/image/{deleteHash}", "")
                 .prettyPeek()
                 .then()
-                .statusCode(200);
+                .statusCode(400);
     }
 }

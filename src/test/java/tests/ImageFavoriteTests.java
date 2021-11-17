@@ -11,9 +11,9 @@ import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
 
-@Story("Image Update API tests")
+@Story("Image Favorite API tests")
 
-public class ImageUpdateTests extends BaseTest{
+public class ImageFavoriteTests extends BaseTest{
     private final String PATH_TO_IMAGE = "src/test/resources/luca_02.jpeg";
     static String encodedFile;
     String imageId;
@@ -40,16 +40,15 @@ public class ImageUpdateTests extends BaseTest{
         deleteHashImage = response.jsonPath().getString("data.deletehash");
     }
 
-    @DisplayName("Изменение title")
+    @DisplayName("Файл в избранные")
     @Test
-    void updateFileTest() {
-         given()
+    void addFavoriteFileTest() {
+            given()
                 .headers("Authorization", token)
-                .param("title", "Heart")
                 .expect()
                 .statusCode(200)
                 .when()
-                .post("https://api.imgur.com/3/image/{imageHash}", imageId)
+                .post("https://api.imgur.com/3/image/{imageHash}/favorite", imageId)
                 .prettyPeek()
                 .then()
                 .statusCode(200)

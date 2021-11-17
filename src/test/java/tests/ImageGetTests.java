@@ -11,9 +11,9 @@ import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
 
-@Story("Image Update API tests")
+@Story("Image Get API tests")
 
-public class ImageUpdateTests extends BaseTest{
+public class ImageGetTests extends BaseTest{
     private final String PATH_TO_IMAGE = "src/test/resources/luca_02.jpeg";
     static String encodedFile;
     String imageId;
@@ -40,16 +40,15 @@ public class ImageUpdateTests extends BaseTest{
         deleteHashImage = response.jsonPath().getString("data.deletehash");
     }
 
-    @DisplayName("Изменение title")
+    @DisplayName("Метод Get")
     @Test
-    void updateFileTest() {
-         given()
+    void GetFileTest() {
+        given()
                 .headers("Authorization", token)
-                .param("title", "Heart")
                 .expect()
                 .statusCode(200)
                 .when()
-                .post("https://api.imgur.com/3/image/{imageHash}", imageId)
+                .get("https://api.imgur.com/3/image/{imageHash}", imageId)
                 .prettyPeek()
                 .then()
                 .statusCode(200)
